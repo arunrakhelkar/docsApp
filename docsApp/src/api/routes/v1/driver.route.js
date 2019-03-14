@@ -141,5 +141,13 @@ router
    */
   .delete(controller.remove);
 
+  
+router
+  .route('/:driverId/booking')
+  .get(controller.getBookingRequests)
+
+router
+  .route('/:driverId/booking/:bookingId/accept')
+  .post(controller.acceptBooking)
 
 module.exports = router;

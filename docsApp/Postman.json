@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "1ef9c66c-a80c-4781-92b3-20771d7744ff",
+		"name": "CP Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\" : \"test123@gmail.com\",\n\t\"password\" : \"1234ds56\"\n}"
+						},
+						"url": "http://localhost:3000/v1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:3000/v1/users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "driver",
+			"item": [
+				{
+					"name": "Create Driver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"arun\",\n\t\"email\" : \"12@gmail.com\",\n\t\"phone\" : \"7799822321\"\n}"
+						},
+						"url": "http://localhost:3000/v1/driver"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Drivers List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:3000/v1/driver"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"arun123\",\n\t\"phone\": \"7039872733\",\n\t\"email\":\"arun@ksdam.com\"\n}"
+						},
+						"url": "http://localhost:3000/v1/driver/5c8a314090ffec3e1c49affe/booking"
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Booking by Driver",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:3000/v1/driver/5c8a314090ffec3e1c49affe/booking/5c8a361490ffec3e1c49b000/accept"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "booking",
+			"item": [
+				{
+					"name": "Create Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user\":\"5c8a35de90ffec3e1c49afff\"\n}"
+						},
+						"url": "http://localhost:3000/v1/booking"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:3000/v1/booking"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

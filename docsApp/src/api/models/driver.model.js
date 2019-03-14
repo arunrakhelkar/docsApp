@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const { omitBy, isNil } = require('lodash');
-const bcrypt = require('bcryptjs');
-const moment = require('moment-timezone');
-const uuidv4 = require('uuid/v4');
 const APIError = require('../utils/APIError');
-const { env } = require('../../config/vars');
 
 /**
 * Driver Status
@@ -40,9 +36,11 @@ const driverSchema = new mongoose.Schema({
     default : 'waiting'
   },
   location:{
+    
   },
   currentRide:{
-
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking',
   }
 }, {
   timestamps: true,

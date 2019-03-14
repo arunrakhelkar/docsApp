@@ -1,6 +1,7 @@
 const express = require('express');
 const driverRoutes = require('./driver.route');
 const userRoutes = require('./user.route');
+const bookingRoutes = require('./booking.route');
 const router = express.Router();
 
 /**
@@ -15,6 +16,6 @@ router.use('/docs', express.static('docs'));
 
 router.use('/users', userRoutes);
 router.use('/driver', driverRoutes);
-//router.use('/booking',bookingRoutes);
+router.use('/booking',bookingRoutes);
 
 module.exports = router;

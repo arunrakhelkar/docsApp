@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
 const Driver = require('../models/driver.model');
+const Booking = require('../models/booking.model');
 const mongoose = require('mongoose');
 
 /**
@@ -34,7 +35,7 @@ exports.create = async (req, res, next) => {
     res.status(httpStatus.CREATED);
     res.json(savedDriver.transform());
   } catch (error) {
-    next(Driver.checkDuplicateEmail(error));
+    next(error);
   }
 };
 
@@ -69,7 +70,7 @@ exports.update = (req, res, next) => {
 
   driver.save()
     .then(savedDriver => res.json(savedDriver.transform()))
-    .catch(e => next(Driver.checkDuplicateEmail(e)));
+    .catch(e => next(e));
 };
 
 /**
@@ -98,3 +99,43 @@ exports.remove = (req, res, next) => {
     .catch(e => next(e));
 };
 
+/**
+* Driver Get Booking Requests
+* @public
+*/
+
+exports.getBookingRequests = async (req,res,next) => {
+  try{
+    let bookings = await Booking.find({broadCastBookingList : mongoose.Types.ObjectId(req.params.driverId)}).exec();
+    console.log(bookings)
+    res.status(httpStatus.OK).send(bookings);
+  }catch(error){
+    next(error)
+  }
+}
+
+exports.acceptBooking = async (req,res,next) => {
+  try{
+    let booking = await Booking.findOne({_id : mongoose.Types.ObjectId(req.params.bookingId)}).exec();
+
+    if(booking && booking.status === 'waiting'){
+      let {driver} = req.locals;
+      driver.status = 'onRide';
+      driver.currentRide = req.params.bookingId;
+
+      booking.broadCastBookingList = [];
+      booking.assignedDriver = req.params.driverId;
+      booking.status = 'onRide'
+
+      await driver.save();
+      await booking.save();
+      
+      res.status(httpStatus.OK).send({message : 'Assigned Driver to this booking'});
+    } else {
+      res.status(httpStatus.OK).send({message : 'Booking already assigned to another driver'});
+    }
+    
+  }catch(error){
+    next(error)
+  } 
+}
