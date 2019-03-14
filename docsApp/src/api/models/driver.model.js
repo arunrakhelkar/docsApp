@@ -51,8 +51,6 @@ const driverSchema = new mongoose.Schema({
 /**
  * Add your
  * - pre-save hooks
- * - validations
- * - virtuals
  */
 driverSchema.pre('save', async function save(next) {
   try {

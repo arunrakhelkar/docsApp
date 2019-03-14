@@ -1,5 +1,6 @@
 const express = require('express');
 const driverRoutes = require('./driver.route');
+const userRoutes = require('./user.route');
 const router = express.Router();
 
 /**
@@ -12,7 +13,7 @@ router.get('/status', (req, res) => res.send('OK'));
  */
 router.use('/docs', express.static('docs'));
 
-//router.use('/users', userRoutes);
+router.use('/users', userRoutes);
 router.use('/driver', driverRoutes);
 //router.use('/booking',bookingRoutes);
 
