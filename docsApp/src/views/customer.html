@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl"> 
+
+<form ng-submit="myFunc()">
+  <select ng-model="itemSelected" ng-options="item.name for item in users">
+  <input type="submit">
+</form>
+
+</div>
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  $http({
+    method: 'GET',
+    url: 'http://localhost:3000/v1/users'
+  })
+  .then(function(response) {
+    console.log(response.data);
+    $scope.users = response.data;
+    $scope.itemSelected = $scope.users[0]
+  });
+  
+  //$scope.onUserChange = function()
+  $scope.myFunc = function () {
+    console.log($scope.itemSelected);
+
+    $http({
+      method:'POST',
+      url: 'http://localhost:3000/v1/booking',
+      data: {
+        user: $scope.itemSelected.id
+      }
+    })
+    .then((response) => {
+      console.log('Created booking..');
+    })
+    .catch((e) => {
+      console.log(e);
+    })
+  }
+});
+</script>
+
+</body>
+</html>

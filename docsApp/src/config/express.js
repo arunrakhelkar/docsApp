@@ -8,7 +8,7 @@ const helmet = require('helmet');
 const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
 const error = require('../api/middlewares/error');
-
+//const path = require('path');
 /**
 * Express instance
 * @public
@@ -46,5 +46,9 @@ app.use(error.notFound);
 
 // error handler, send stacktrace only during development
 app.use(error.handler);
+
+app.set('view engine', 'ejs');
+
+app.engine('html', require('ejs').renderFile);
 
 module.exports = app;

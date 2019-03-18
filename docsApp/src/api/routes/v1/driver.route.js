@@ -13,7 +13,7 @@ router.param('driverId', controller.load);
 router
   .route('/')
   /**
-   * @api {get} v1/drivers List Drivers
+   * @api {get} v1/driver List Drivers
    * @apiDescription Get a list of drivers
    * @apiVersion 1.0.0
    * @apiName ListDrivers
@@ -33,7 +33,7 @@ router
    */
   .get(controller.list)
   /**
-   * @api {post} v1/drivers Create Driver
+   * @api {post} v1/driver Create Driver
    * @apiDescription Create a new driver
    * @apiVersion 1.0.0
    * @apiName CreateDriver
@@ -60,7 +60,7 @@ router
 router
   .route('/:driverId')
   /**
-   * @api {get} v1/drivers/:id Get Driver
+   * @api {get} v1/driver/:id Get Driver
    * @apiDescription Get driver information
    * @apiVersion 1.0.0
    * @apiName GetDriver
@@ -78,7 +78,7 @@ router
    */
   .get(controller.get)
   /**
-   * @api {put} v1/drivers/:id Replace Driver
+   * @api {put} v1/driver/:id Replace Driver
    * @apiDescription Replace the whole driver document with a new one
    * @apiVersion 1.0.0
    * @apiName ReplaceDriver
@@ -141,10 +141,26 @@ router
    */
   .delete(controller.remove);
 
-  
+  /**
+   * @api {get} v1/driver/:id/booking 
+   * @apiDescription Get booking requests for driver
+   * @apiVersion 1.0.0
+   * @apiName getBookingRequests
+   *
+   * @apiError (Not Found 404)    NotFound      Driver does not exist
+   */
 router
   .route('/:driverId/booking')
   .get(controller.getBookingRequests)
+
+/**
+   * @api {post} v1/driver/:id/booking/:bookingId/accept 
+   * @apiDescription accept booking request from customer
+   * @apiVersion 1.0.0
+   * @apiName getBookingRequests
+   *
+   * @apiError (Not Found 404)    NotFound      Driver does not exist
+   */
 
 router
   .route('/:driverId/booking/:bookingId/accept')

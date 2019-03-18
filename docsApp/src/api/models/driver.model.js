@@ -92,7 +92,7 @@ driverSchema.statics = {
       let driver;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        driver = await this.findById(id).exec();
+        driver = await this.findById(id).populate('currentRide').exec();
       }
       if (driver) {
         return driver;
@@ -124,6 +124,7 @@ driverSchema.statics = {
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
+      .populate('currentRide')
       .exec();
   },
 

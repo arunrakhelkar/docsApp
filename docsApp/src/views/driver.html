@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl"> 
+
+<button class="tablink" onclick="openPage('Waiting', this, 'black')">Waiting</button>
+<button class="tablink" onclick="openPage('Ongoing', this, 'black')" id="defaultOpen">Ongoing</button>
+<button class="tablink" onclick="openPage('Completed', this, 'black')">Completed</button>
+
+<div id="Waiting" class="tabcontent">
+  <h3>Waiting</h3>
+  <form ng-repeat="x in bookings">
+  	<p>BookingId: {{ x._id }}</p>
+  	<p>CustomerId: {{ x.user }}</p>
+  	<button ng-click="acceptBooking(x._id)">Accept Booking</button>
+  </form>
+</div>
+
+<div id="Ongoing" class="tabcontent">
+  <h3>Ongoing</h3>
+  <form >
+  	<!-- <p>BookingId: {{ x._id }}</p> -->
+  	<p>BookingId: {{ongoing.currentRide._id}}</p>
+  	<p>CustomerId: {{ongoing.currentRide.user}}</p>
+  	<p>Requested: {{ongoing.currentRide.createdAt}}</p>
+  	<p>picked up: {{ongoing.currentRide.updatedAt}}</p>
+  </form>
+</div>
+
+<div id="Completed" class="tabcontent">
+  <h3>Completed</h3>
+  <form ng-repeat="x in bookings">
+  	<p>BookingId: {{ x._id }}</p>
+  	<p>CustomerId: {{ x.user }}</p>
+  	<p>Requested: {{ongoing.currentRide.createdAt}}</p>
+  	<p>finished: {{ongoing.currentRide.updatedAt}}</p>
+  	</br>
+  </form>
+</div>
+
+</div>
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+
+	$scope.driver_id = getParameterByName('id');
+	console.log($scope.driver_id);
+
+	getWaitingUsers();
+	getOngoingRide();
+	getcompletedRides();
+
+	function getParameterByName(name, url) {
+	    if (!url) url = window.location.href;
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	        results = regex.exec(url);
+	    if (!results) return null;
+	    if (!results[2]) return '';
+	    return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+	
+	$scope.driver_id = getParameterByName('id');
+	console.log($scope.driver_id);
+  
+	$scope.acceptBooking = function (booking_id) {
+  	
+	    $http({
+	    	method: 'POST',
+	    	url: 'http://localhost:3000/v1/driver/' + $scope.driver_id + '/booking/' + booking_id + '/accept'
+	    })
+	    .then(function(response){
+	    	console.log(response);
+	    	if(response.status === 200){location.reload();}
+	    	alert(response.data.message);
+	    })
+	    .catch(e => alert(e.data.message));
+  	}
+
+  	function getWaitingUsers (){
+  		$http({
+	  		method: 'GET',
+	  		url: 'http://localhost:3000/v1/driver/' + $scope.driver_id +'/booking'
+	  	})
+	  	.then(function(response){
+	  		//console.log(response);
+	  		$scope.bookings = response.data
+	  	})
+	  	.catch(e => console.log(e));
+  	}
+
+  	function getOngoingRide(){
+  		$http({
+	  		method: 'GET',
+	  		url: 'http://localhost:3000/v1/driver/' + $scope.driver_id,
+	  	})
+	  	.then(function(response){
+	  		console.log(response);
+	  		if(response.data.status === 'onRide')
+	  			$scope.ongoing = response.data;
+	  		else $scope.ongoing = null
+	  	})
+	  	.catch(e =>  console.log(e));
+  	}
+
+  	function getcompletedRides() {
+  		$http({
+	  		method: 'GET',
+	  		url:'http://localhost:3000/v1/booking',
+	  		params: {
+	  			status: 'finished',
+	  			assignedDriver: $scope.driver_id
+	  		}	
+	  	})
+	  	.then(function(response){
+	  		//console.log(response);
+	  		$scope.Completed = response.data
+	  	})
+	  	.catch(e => alert(e.data.message));
+  	}
+});
+</script>
+<script>
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+</body>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {box-sizing: border-box}
+
+/* Set height of body and the document to 100% */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+
+/* Style tab links */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 33.33%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: black;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+#Home {background-color: white;}
+#News {background-color: white;}
+#Contact {background-color: white;}
+#About {background-color: white;}
+</style>
+</head>
+</html>
+

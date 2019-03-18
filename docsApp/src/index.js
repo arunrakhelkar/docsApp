@@ -4,9 +4,20 @@ const { port, env } = require('./config/vars');
 const logger = require('./config/logger');
 const app = require('./config/express');
 const mongoose = require('./config/mongoose');
+const cron = require('node-cron');
+const rideStatus = require('./api/utils/rideStatusCron');
 
 // open mongoose connection
 mongoose.connect();
+
+
+cron.schedule('*/15 * * * * *', function(){
+
+	logger.info('Running schedule every 15 second....');
+
+	rideStatus.updateDriverStatusCron()
+	.catch(e => console.log(e));
+});
 
 // listen to requests
 app.listen(port, () => logger.info(`server started on port ${port} (${env})`));

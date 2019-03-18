@@ -31,7 +31,7 @@ exports.get = (req, res) => res.json(req.locals.booking.transform());
 exports.create = async (req, res, next) => {
   try {
     const booking = new Booking(req.body);
-    let drivers = await Driver.list();
+    let drivers = await Driver.list({});
     console.log(drivers)
     drivers = drivers.map(driver => driver._id);
     booking.broadCastBookingList = drivers;
@@ -39,7 +39,7 @@ exports.create = async (req, res, next) => {
     res.status(httpStatus.CREATED);
     res.json(savedBooking.transform());
   } catch (error) {
-    next(Booking.checkDuplicateEmail(error));
+    next(error);
   }
 };
 
@@ -59,7 +59,7 @@ exports.replace = async (req, res, next) => {
 
     res.json(savedBooking.transform());
   } catch (error) {
-    next(Booking.checkDuplicateEmail(error));
+    next(error);
   }
 };
 
@@ -74,7 +74,7 @@ exports.update = (req, res, next) => {
 
   booking.save()
     .then(savedBooking => res.json(savedBooking.transform()))
-    .catch(e => next(Booking.checkDuplicateEmail(e)));
+    .catch(e => next(e));
 };
 
 /**

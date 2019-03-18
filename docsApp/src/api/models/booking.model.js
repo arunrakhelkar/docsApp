@@ -56,7 +56,7 @@ bookingSchema.pre('save', async function save(next) {
 bookingSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'user', 'assignedDriver', 'broadCastBookingList', 'location','createdAt'];
+    const fields = ['id', 'user', 'assignedDriver', 'broadCastBookingList', 'location','createdAt', 'status', 'updatedAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -109,7 +109,7 @@ bookingSchema.statics = {
   list({
     page = 1, perPage = 30, user, assignedDriver, status
   }) {
-    const options = omitBy({ user, assignedDriver, status }, isNil);
+    const options = omitBy({ user, assignedDriver, status}, isNil);
 
     return this.find(options)
       .sort({ createdAt: -1 })

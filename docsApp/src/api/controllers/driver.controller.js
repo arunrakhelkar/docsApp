@@ -55,7 +55,7 @@ exports.replace = async (req, res, next) => {
 
     res.json(savedDriver.transform());
   } catch (error) {
-    next(Driver.checkDuplicateEmail(error));
+    next(error);
   }
 };
 
@@ -118,8 +118,14 @@ exports.acceptBooking = async (req,res,next) => {
   try{
     let booking = await Booking.findOne({_id : mongoose.Types.ObjectId(req.params.bookingId)}).exec();
 
+    let {driver} = req.locals;
+
+    if( driver && driver.status === 'onRide'){
+      res.status(httpStatus.METHOD_NOT_ALLOWED).send({message : 'Driver is already on ride.'})
+      return;
+    }
     if(booking && booking.status === 'waiting'){
-      let {driver} = req.locals;
+      
       driver.status = 'onRide';
       driver.currentRide = req.params.bookingId;
 
@@ -132,7 +138,8 @@ exports.acceptBooking = async (req,res,next) => {
       
       res.status(httpStatus.OK).send({message : 'Assigned Driver to this booking'});
     } else {
-      res.status(httpStatus.OK).send({message : 'Booking already assigned to another driver'});
+
+      res.status(httpStatus.METHOD_NOT_ALLOWED).send({message : 'Booking already assigned to another driver'});
     }
     
   }catch(error){

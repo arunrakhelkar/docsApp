@@ -44,7 +44,6 @@ router
    * @apiParam  {String}             email     Booking's email
    * @apiParam  {String{6..128}}     password  Booking's password
    * @apiParam  {String{..128}}      [name]    Booking's name
-   * @apiParam  {String=booking,admin}  [role]    Booking's role
    *
    * @apiSuccess (Created 201) {String}  id         Booking's id
    * @apiSuccess (Created 201) {String}  name       Booking's name
